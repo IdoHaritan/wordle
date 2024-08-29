@@ -1,0 +1,22 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+form {
+  .guess {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .char {
+      width: 50px;
+      aspect-ratio: 1 / 1;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      font-size: 40px;
+    }
+  }
+}
