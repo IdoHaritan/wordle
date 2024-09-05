@@ -9,7 +9,10 @@ const hash = (value) => {
 };
 
 const get_word = async () => {
-  const words = (await (await fetch("words.txt")).text()).split("\n");
+  const response = await fetch("words.txt");
+  const text = await response.text();
+  const normalizedText = text.replace(/\r\n/g, '\n');
+  const words = normalizedText.split('\n');
 
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
