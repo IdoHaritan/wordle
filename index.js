@@ -39,6 +39,17 @@ const does_word_exist = () => {
   return true;
 };
 
+const is_letter_included = (char, index, todays_word) => {
+  const other_index = todays_word.indexOf(char)
+  if (index == other_index) {
+    return 1; // Green
+  } else if (other_index == -1) {
+    return 0; // Grey
+  } else {
+    return 2; // Yellow
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const guessLines = document.querySelectorAll(".guess");
   const allInputs = document.querySelectorAll(".char");
@@ -90,11 +101,28 @@ document.addEventListener("DOMContentLoaded", function () {
         if (event.key === "Enter" && inputIndex === inputs.length - 1) {
           event.preventDefault();
 
+          const user_word = user_guess.join("");
+
           if (!input.value) {
             return;
           }
 
           if (!does_word_exist()) {
+            return;
+          }
+
+          const colors = {
+            0: "gray",
+            1: "green",
+            2: "yellow"
+          };
+
+          [...user_word].forEach((char, index) => {
+            inputs[index].classList.add(colors[is_letter_included(char, index, todays_word)])
+          })
+
+          if (user_word == todays_word) {
+            alert("Guessed correctly!");
             return;
           }
 

@@ -17,6 +17,14 @@ form {
       padding: 0;
       text-align: center;
       font-size: 40px;
+
+      &.yellow {
+        background-color: yellow;
+      }
+
+      &.green {
+        background-color: #7cf943;
+      }
     }
   }
 }
