@@ -11,8 +11,8 @@ const hash = (value) => {
 const get_word = async () => {
   const response = await fetch("words.txt");
   const text = await response.text();
-  const normalizedText = text.replace(/\r\n/g, '\n');
-  const words = normalizedText.split('\n');
+  const normalizedText = text.replace(/\r\n/g, "\n");
+  const words = normalizedText.split("\n");
 
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
@@ -40,7 +40,7 @@ const does_word_exist = () => {
 };
 
 const is_letter_included = (char, index, todays_word) => {
-  const other_index = todays_word.indexOf(char)
+  const other_index = todays_word.indexOf(char);
   if (index == other_index) {
     return [1, "🟩"]; // Green
   } else if (other_index == -1) {
@@ -48,7 +48,7 @@ const is_letter_included = (char, index, todays_word) => {
   } else {
     return [2, "🟨"]; // Yellow
   }
-}
+};
 
 let emoji_answer = [];
 
@@ -57,12 +57,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const allInputs = document.querySelectorAll(".char");
   const allKeyboardChars = document.querySelectorAll("#keyboard .line span");
 
-  allKeyboardChars.forEach(key => {
+  allKeyboardChars.forEach((key) => {
     key.addEventListener("click", (e) => {
-      document.querySelector("")
-      console.log(key.innerHTML)
-    })
-  })
+      document.querySelector("");
+      console.log(key.innerHTML);
+    });
+  });
 
   allInputs.forEach((input) => {
     input.disabled = true;
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
           }
 
           if (!does_word_exist()) {
-            line.classList.add("wiggle")
+            line.classList.add("wiggle");
             setTimeout(() => {
               line.classList.remove("wiggle");
             }, 500);
@@ -128,18 +128,24 @@ document.addEventListener("DOMContentLoaded", function () {
           const colors = {
             0: "gray",
             1: "green",
-            2: "yellow"
+            2: "yellow",
           };
           let current_emoji = [];
           [...user_word].forEach((char, index) => {
-            const included_output = is_letter_included(char, index, todays_word);
+            const included_output = is_letter_included(
+              char,
+              index,
+              todays_word
+            );
             inputs[index].classList.add(colors[included_output[0]]);
-            document.querySelector(`#keyboard .line span#char-${char}`).classList.add(colors[included_output[0]])
+            document
+              .querySelector(`#keyboard .line span#char-${char}`)
+              .classList.add(colors[included_output[0]]);
             current_emoji.push(included_output[1]);
             console.log(current_emoji);
-          })
-          emoji_answer.push(current_emoji, "\n"); 
-          console.log(emoji_answer)
+          });
+          emoji_answer.push(current_emoji, "\n");
+          console.log(emoji_answer);
           current_emoji = [];
 
           if (user_word == todays_word) {
@@ -147,21 +153,23 @@ document.addEventListener("DOMContentLoaded", function () {
             const emojis = emoji_answer.toString().replaceAll(",", "");
             alert(emojis + "\n Guessed correctly!");
             inputs.forEach((inp) => (inp.disabled = true));
-            line.classList.remove("active")
+            line.classList.remove("active");
             return;
           }
 
           if (lineIndex < guessLines.length - 1) {
             inputs.forEach((inp) => (inp.disabled = true));
-            line.classList.remove("active")
-            const nextLine = guessLines[lineIndex + 1].querySelectorAll(".char");
+            line.classList.remove("active");
+            const nextLine =
+              guessLines[lineIndex + 1].querySelectorAll(".char");
             guessLines[lineIndex + 1].classList.add("active");
             nextLine.forEach((inp) => (inp.disabled = false));
-            nextLine[0].focus();            
+            nextLine[0].focus();
           } else {
             inputs.forEach((inp) => (inp.disabled = true));
-            line.classList.remove("active")
-            alert("GAME OVER");
+            line.classList.remove("active");
+            alert(`GAME OVER
+              The word was '${todays_word}'`);
           }
 
           user_guess.length = 0;
