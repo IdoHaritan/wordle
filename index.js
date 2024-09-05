@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", function () {
             inputs.forEach((inp) => (inp.disabled = true));
             line.classList.remove("active")
             const nextLine = guessLines[lineIndex + 1].querySelectorAll(".char");
-            nextLine.classList.add("active")
+            guessLines[lineIndex + 1].classList.add("active");
             nextLine.forEach((inp) => (inp.disabled = false));
             nextLine[0].focus();            
           } else {
