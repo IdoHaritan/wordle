@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap');
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
 }
@@ -26,18 +27,23 @@ html, body {
   0% {
     transform: translateX(0);
   }
+
   20% {
     transform: translateX(10px);
   }
+
   40% {
     transform: translateX(-10px);
   }
+
   60% {
     transform: translateX(10px);
   }
+
   80% {
     transform: translateX(-10px);
   }
+
   100% {
     transform: translateX(0);
   }
@@ -62,6 +68,11 @@ html, body {
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      transition: all 0.4s ease;
+
+      &:not([class]):hover {
+        background-color: #d0d0d0;
+      }
     }
   }
 }
