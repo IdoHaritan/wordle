@@ -9,7 +9,10 @@ const hash = (value) => {
 };
 
 const get_word = async () => {
-  const words = (await (await fetch("words.txt")).text()).split("\n");
+  const response = await fetch("words.txt");
+  const text = await response.text();
+  const normalizedText = text.replace(/\r\n/g, '\n');
+  const words = normalizedText.split('\n');
 
   const currentDate = new Date();
   currentDate.setHours(0, 0, 0, 0);
@@ -36,9 +39,30 @@ const does_word_exist = () => {
   return true;
 };
 
+const is_letter_included = (char, index, todays_word) => {
+  const other_index = todays_word.indexOf(char)
+  if (index == other_index) {
+    return [1, "🟩"]; // Green
+  } else if (other_index == -1) {
+    return [0, "⬜"]; // gray
+  } else {
+    return [2, "🟨"]; // Yellow
+  }
+}
+
+let emoji_answer = [];
+
 document.addEventListener("DOMContentLoaded", function () {
   const guessLines = document.querySelectorAll(".guess");
   const allInputs = document.querySelectorAll(".char");
+  const allKeyboardChars = document.querySelectorAll("#keyboard .line span");
+
+  allKeyboardChars.forEach(key => {
+    key.addEventListener("click", (e) => {
+      document.querySelector("")
+      console.log(key.innerHTML)
+    })
+  })
 
   allInputs.forEach((input) => {
     input.disabled = true;
@@ -87,22 +111,56 @@ document.addEventListener("DOMContentLoaded", function () {
         if (event.key === "Enter" && inputIndex === inputs.length - 1) {
           event.preventDefault();
 
+          const user_word = user_guess.join("");
+
           if (!input.value) {
             return;
           }
 
           if (!does_word_exist()) {
+            line.classList.add("wiggle")
+            setTimeout(() => {
+              line.classList.remove("wiggle");
+            }, 500);
+            return;
+          }
+
+          const colors = {
+            0: "gray",
+            1: "green",
+            2: "yellow"
+          };
+          let current_emoji = [];
+          [...user_word].forEach((char, index) => {
+            const included_output = is_letter_included(char, index, todays_word);
+            inputs[index].classList.add(colors[included_output[0]]);
+            document.querySelector(`#keyboard .line span#char-${char}`).classList.add(colors[included_output[0]])
+            current_emoji.push(included_output[1]);
+            console.log(current_emoji);
+          })
+          emoji_answer.push(current_emoji, "\n"); 
+          console.log(emoji_answer)
+          current_emoji = [];
+
+          if (user_word == todays_word) {
+            console.log(emoji_answer.toString());
+            const emojis = emoji_answer.toString().replaceAll(",", "");
+            alert(emojis + "\n Guessed correctly!");
+            inputs.forEach((inp) => (inp.disabled = true));
+            line.classList.remove("active")
             return;
           }
 
           if (lineIndex < guessLines.length - 1) {
             inputs.forEach((inp) => (inp.disabled = true));
-            const nextLine =
-              guessLines[lineIndex + 1].querySelectorAll(".char");
+            line.classList.remove("active")
+            const nextLine = guessLines[lineIndex + 1].querySelectorAll(".char");
+            nextLine.classList.add("active")
             nextLine.forEach((inp) => (inp.disabled = false));
-            nextLine[0].focus();
+            nextLine[0].focus();            
           } else {
             inputs.forEach((inp) => (inp.disabled = true));
+            line.classList.remove("active")
             alert("GAME OVER");
           }
 
