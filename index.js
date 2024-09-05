@@ -8,22 +8,32 @@ const hash = (value) => {
   return Math.abs(hash);
 };
 
-const user_guess = [];
-const words = (await (await fetch("words.txt")).text()).split("\n");
-console.log(words.length);
-console.log(typeof words);
+const get_word = async () => {
+  const words = (await (await fetch("words.txt")).text()).split("\n");
 
-const currentDate = new Date();
-currentDate.setHours(0, 0, 0, 0);
+  const currentDate = new Date();
+  currentDate.setHours(0, 0, 0, 0);
 
-const todays_word =
-  words[hash(currentDate.getTime().toString()) % words.length];
-console.log(todays_word);
+  return [
+    words,
+    words[hash(currentDate.getTime().toString()) % words.length].toUpperCase(),
+  ];
+};
 
 const update_guess = (index, char = "") => {
   user_guess[index] = char;
-  console.log(user_guess);
   console.log(user_guess.join(""));
+  console.log(todays_word);
+};
+
+const does_word_exist = () => {
+  const user_word = user_guess.join("").toLowerCase();
+
+  if (user_word.length < 5 || !words.includes(user_word)) {
+    return false;
+  }
+
+  return true;
 };
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -81,6 +91,10 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
           }
 
+          if (!does_word_exist()) {
+            return;
+          }
+
           if (lineIndex < guessLines.length - 1) {
             inputs.forEach((inp) => (inp.disabled = true));
             const nextLine =
@@ -98,3 +112,8 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 });
+
+const user_guess = [];
+const output = await get_word();
+const words = output[0];
+const todays_word = output[1];
