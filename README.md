@@ -1,1 +1,4 @@
 # wordle
+```
+npm run start
+```
